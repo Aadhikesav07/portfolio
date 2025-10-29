@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aadhikesav A - Portfolio</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Root & general */
+    :root {
+      --bg-dark: #0d1117;
+      --bg-card: #161b22;
+      --accent: #9f70fc;
+      --accent-light: #58a6ff;
+      --text: #c9d1d9;
+      --sub-text: #8b949e;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+    }
+    a {text-decoration:none;}
+    
+    /* Navbar */
+    nav {
+      background: var(--bg-card);
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 3px 16px #2a003590;
+      width: 100%;
+    }
+    .navbar-content {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 24px;
+      height: 68px;
+    }
+    .nav-brand {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent);
+      height: 68px;
+      line-height: 68px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      margin-right: 36px;
+    }
+    .nav-center {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      align-items: center;
+    }
+    .nav-center a {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.03rem;
+      padding-bottom: 5px;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    }
+    .nav-center a i {
+      color: var(--accent-light);
+      font-size: 0.9rem;
+    }
+    .nav-center a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent-light);
+    }
+    .nav-actions {
+      flex: 0 0 auto;
+      margin-left: 0;
+    }
+    .toggle-theme {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--accent-light);
+      font-size: 1.4rem;
+    }
+    @media (max-width: 850px) {
+      .nav-center {gap: 18px;}
+      .nav-brand {font-size: 1.25rem; margin-right: 14px;}
+    }
+    @media (max-width: 550px) {
+      .navbar-content {
+        flex-wrap: wrap; height: auto; padding: 8px 20px;
+        justify-content: space-between;
+      }
+      .nav-brand {margin-bottom: 8px;}
+      .nav-center {
+        justify-content: flex-start;
+        flex-basis: 100%;
+        gap: 10px;
+      }
+    }
+    
+    /* Hero & About Section */
+    .hero-about-wrap {
+      max-width: 980px;
+      margin: 70px auto 52px auto;
+      padding: 56px 36px 48px 36px;
+      background: var(--bg-card);
+      border-radius: 22px;
+      box-shadow: 0 0 34px #ae72ff36;
+      text-align: center;
+    }
+    .hero-details h2 {
+      font-size: 2.6rem;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+    .hero-details p {
+      font-size: 1.14rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .hero-details ul {
+      max-width: 520px;
+      margin: 18px auto 0 auto;
+      padding-left: 22px;
+      text-align: left;
+      line-height: 1.85;
+      font-size: 1.04rem;
+    }
+    .hero-details ul li {
+      margin-bottom: 9px;
+      position: relative;
+      padding-left: 22px;
+    }
+    .hero-details ul li::before {
+      content: "\f0a9";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      color: var(--accent-light);
+      font-size: 0.9rem;
+      top: 6px;
+      user-select: none;
+    }
+    .hero-socials {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      font-size: 1.8rem;
+    }
+    .hero-socials a {
+      color: var(--accent-light);
+      transition: color 0.2s;
+    }
+    .hero-socials a:hover {
+      color: var(--accent);
+    }
+    
+    /* Sections Headings */
+    section {
+      max-width: 1000px;
+      margin: 70px auto 0 auto;
+      padding: 0 24px;
+    }
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 28px;
+      letter-spacing: 0.1em;
+    }
+
+    /* Skills */
+    .skills-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      justify-items: center;
+      margin-top: 24px;
+    }
+    .skill-item {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 20px 10px;
+      color: var(--accent-light);
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-align: center;
+      box-shadow: 0 1px 16px #7d69df22;
+      cursor: default;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+    .skill-item i {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+    .skill-item:hover {
+      transform: scale(1.07);
+    }
+
+    /* Achievements & Internships */
+    .achievements-list, .internships-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 26px;
+    }
+    .achievement-item, .internship-item {
+      background: var(--bg-card);
+      flex: 0 0 280px;
+      border-radius: 18px;
+      box-shadow: 0 0 16px #ab6cff60;
+      padding: 24px 12px;
+      text-align: center;
+      user-select: none;
+    }
+    .achievement-item i, .internship-item i {
+      font-size: 2.3rem;
+      margin-bottom: 13px;
+      color: var(--accent);
+    }
+
+    /* Projects */
+    .projects-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px,1fr));
+      gap: 20px;
+    }
+    .project-item {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 14px 12px;
+      box-shadow: 0 0 18px #9f70fc30;
+      color: var(--text);
+      cursor: default;
+    }
+    .project-item h4 {
+      color: var(--accent-light);
+      margin: 10px 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .project-item p.tech {
+      color: #74c6ff;
+      font-weight: 600;
+      margin: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .project-item p {
+      font-size: 0.93rem;
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+    .project-item p.tech i {
+      font-size: 1.15rem;
+      color: var(--accent-light);
+    }
+
+    /* Timeline */
+    .timeline {
+      max-width: 700px;
+      margin: 0 auto 44px auto;
+    }
+    .timeline-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 38px;
+    }
+    .timeline-icon {
+      flex: 0 0 40px;
+      font-size: 1.7rem;
+      color: var(--accent-light);
+      margin-right: 18px;
+      text-align: center;
+    }
+    .timeline-content h4 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--accent);
+      letter-spacing: 0.2px;
+    }
+    .timeline-content .sub {
+      color: var(--sub-text);
+      font-size: 0.98rem;
+    }
+    .timeline-content p {
+      margin: 4px 0 0 0;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    /* Certifications & Patent */
+    .cert-list, .patent-list {
+      list-style: none;
+      padding-left: 22px;
+      max-width: 500px;
+      margin: 10px auto 25px auto;
+    }
+    .cert-list li, .patent-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+    }
+    .cert-list li i, .patent-list li i {
+      font-size: 1.3rem;
+      color: var(--accent-light);
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 16px;
+      color: var(--sub-text);
+      padding: 45px 0 25px 0;
+    }
+
+    @media (max-width: 650px) {
+      .nav-center {gap: 16px;}
+      .navbar-content {flex-wrap: wrap; height: auto; justify-content: space-between;}
+      .timeline-item {flex-direction: column; gap: 6px;}
+      .timeline-icon {margin-bottom: 4px;}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar-content">
+      <div class="nav-brand"><i class="fas fa-user"></i> Aadhikesav A</div>
+      <div class="nav-center">
+        <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#skills"><i class="fas fa-tools"></i> Skills</a>
+        <a href="#achievements"><i class="fas fa-award"></i> Achievements</a>
+        <a href="#internships"><i class="fas fa-briefcase"></i> Internships</a>
+        <a href="#projects"><i class="fas fa-rocket"></i> Projects</a>
+        <a href="#education"><i class="fas fa-graduation-cap"></i> Education</a>
+        <a href="#certifications"><i class="fas fa-certificate"></i> Certifications</a>
+        <a href="#patents"><i class="fas fa-lightbulb"></i> Patent</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle-theme" id="toggle-theme" title="Toggle dark/light">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <section id="about">
+    <div class="hero-about-wrap">
+      <div class="hero-details">
+        <h2>Aadhikesav A</h2>
+        <p>
+          <i class="fas fa-university"></i> Computer Science Engineering undergraduate (2023–2027) at KRCE, Trichy.<br>
+          <i class="fas fa-cogs"></i> Passionate developer in Zoho CRM ecosystem, specialized in CRM extensions, automations, AI apps & full-stack solutions.<br>
+          <i class="fas fa-trophy"></i> Hackathon winner, open-source contributor, and inventor with a government patent.<br>
+          <span style="font-size:.98rem">
+            <b><i class="fas fa-id-badge"></i> Name:</b> Aadhikesav A |
+            <b><i class="fas fa-language"></i> Languages:</b> Tamil, Telugu, English <br>
+            <b><i class="fas fa-tools"></i> Currently learning:</b> Azure, DevOps, AI integration
+          </span>
+        </p>
+        <ul>
+          <li><i class="fas fa-user-tie"></i> Zoho Summer Intern (CRM Marketplace Automation)</li>
+          <li><i class="fas fa-medal"></i> Winner: National Hackathon (3rd, BIT Erode)</li>
+          <li><i class="fas fa-file-contract"></i> Published patent: Smart Water Can System</li>
+          <li><i class="fas fa-calendar-alt"></i> Coordinator: FunFest’25, QubeIT’24, HexTech’25</li>
+          <li><i class="fas fa-file-code"></i> Open-source & tech blog contributor</li>
+        </ul>
+        <div class="hero-socials">
+          <a href="mailto:aadhikesav07@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://github.com/Aadhikesav07" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/aadhi-kesav" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="tel:+919790064592" title="Phone"><i class="fas fa-phone"></i></a>
+          <a href="#" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
+          <a href="#" title="Linux"><i class="fab fa-linux"></i></a>
+          <a href="#" title="Microsoft Azure"><i class="fab fa-microsoft"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h3 class="section-heading">Skills & Technologies</h3>
+    <div class="skills-list">
+      <div class="skill-item"><i class="fab fa-python"></i><br>Python</div>
+      <div class="skill-item"><i class="fab fa-js"></i><br>JavaScript</div>
+      <div class="skill-item"><i class="fab fa-java"></i><br>Java</div>
+      <div class="skill-item"><i class="fas fa-bolt"></i><br>Deluge</div>
+      <div class="skill-item"><i class="fab fa-html5"></i><br>HTML5</div>
+      <div class="skill-item"><i class="fab fa-css3-alt"></i><br>CSS3</div>
+      <div class="skill-item"><i class="fab fa-react"></i><br>React.js</div>
+      <div class="skill-item"><i class="fas fa-leaf"></i><br>Spring Boot</div>
+      <div class="skill-item"><i class="fas fa-database"></i><br>MongoDB</div>
+      <div class="skill-item"><i class="fas fa-server"></i><br>SQL/MySQL</div>
+      <div class="skill-item"><i class="fab fa-git-alt"></i><br>Git & GitHub</div>
+      <div class="skill-item"><i class="fas fa-plug"></i><br>Zoho CRM SDK</div>
+      <div class="skill-item"><i class="fas fa-cloud"></i><br>REST APIs</div>
+      <div class="skill-item"><i class="fab fa-python"></i><br>Streamlit</div>
+      <div class="skill-item"><i class="fab fa-microsoft"></i><br>Azure</div>
+      <div class="skill-item"><i class="fab fa-linux"></i><br>Linux</div>
+      <div class="skill-item"><i class="fas fa-terminal"></i><br>Bash/Shell</div>
+      <div class="skill-item"><i class="fab fa-node-js"></i><br>Node.js</div>
+      <div class="skill-item"><i class="fab fa-npm"></i><br>npm</div>
+    </div>
+  </section>
+
+  <section id="achievements">
+    <h3 class="section-heading">Achievements</h3>
+    <div class="achievements-list">
+      <div class="achievement-item"><i class="fas fa-award"></i><div>Zoho Summer Intern</div></div>
+      <div class="achievement-item"><i class="fas fa-trophy"></i><div>3rd Place - National Hackathon (BIT Erode)</div></div>
+      <div class="achievement-item"><i class="fas fa-certificate"></i><div>Patent - Smart Water Can System</div></div>
+      <div class="achievement-item"><i class="fas fa-hands-helping"></i><div>Coordinator - FunFest’25, QubeIT’24, HexTech’25</div></div>
+      <div class="achievement-item"><i class="fas fa-certificate"></i><div>Certifications: Microsoft AI, ML, Data Analytics</div></div>
+    </div>
+  </section>
+
+  <section id="internships">
+    <h3 class="section-heading">Internships</h3>
+    <div class="internships-list">
+      <div class="internship-item"><i class="fas fa-briefcase"></i><div>Zoho Summer Intern<br>CRM Extension Development</div></div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h3 class="section-heading">Projects</h3>
+    <div class="projects-list">
+      <div class="project-item"><h4><i class="fas fa-running"></i> Smart Fitness Tracker Web App</h4><p class="tech">React, AI, Chart.js</p><p>Personalized AI health & workout web app with charts & recommendations.</p></div>
+      <div class="project-item"><h4><i class="fas fa-tint"></i> Water Quality Prediction</h4><p class="tech">Python, Scikit-learn, Streamlit</p><p>ML water quality predictor with dashboards.</p></div>
+      <div class="project-item"><h4><i class="fas fa-database"></i> Zoho CRM Validator Extension</h4><p class="tech">Zoho CRM SDK, Deluge, JS</p><p>Validates email/phone in CRM using APIs.</p></div>
+      <div class="project-item"><h4><i class="fas fa-credit-card"></i> ATM Simulation System</h4><p class="tech">Java, OOP</p><p>Simulates ATM features: withdrawal, balance, PIN auth.</p></div>
+    </div>
+  </section>
+
+  <section id="education">
+    <h3 class="section-heading">Timeline</h3>
+    <div class="timeline">
+      <ul class="timeline-list">
+        <li class="timeline-item">
+          <span class="timeline-icon"><i class="fas fa-university"></i></span>
+          <div class="timeline-content"><h4>2023–2027 &mdash; B.E. Computer Science Engineering</h4> <div class="sub">K. Ramakrishnan College of Engineering, Trichy</div></div>
+        </li>
+        <li class="timeline-item">
+          <span class="timeline-icon"><i class="fas fa-briefcase"></i></span>
+          <div class="timeline-content"><h4>2024 &mdash; Zoho Summer Internship</h4><div class="sub">Zoho Marketplace (CRM Extension)</div></div>
+        </li>
+        <li class="timeline-item">
+          <span class="timeline-icon"><i class="fas fa-trophy"></i></span>
+          <div class="timeline-content"><h4>2025 &mdash; National Level Hackathon</h4><div class="sub">3rd Place at BIT Erode</div></div>
+        </li>
+        <li class="timeline-item">
+          <span class="timeline-icon"><i class="fas fa-certificate"></i></span>
+          <div class="timeline-content"><h4>2024 &mdash; Patent Holder</h4><div class="sub">Smart Water Can System (202441088986 A)</div></div>
+        </li>
+        <li class="timeline-item">
+          <span class="timeline-icon"><i class="fas fa-graduation-cap"></i></span>
+          <div class="timeline-content"><h4>2025 &mdash; Certifications</h4><div class="sub">Microsoft AI, Data Analytics, NPTEL IoT</div></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="certifications">
+    <h3 class="section-heading">Certifications</h3>
+    <ul class="cert-list">
+      <li><i class="fas fa-award"></i> Microsoft AI & Data Analytics</li>
+      <li><i class="fas fa-certificate"></i> NPTEL IoT (Score: 77%)</li>
+    </ul>
+  </section>
+
+  <section id="patents">
+    <h3 class="section-heading">Patent</h3>
+    <ul class="patent-list">
+      <li><i class="fas fa-lightbulb"></i> Smart Water Can System (Patent No: 202441088986 A)</li>
+    </ul>
+  </section>
+
+  <footer>
+    &copy; 2025 Aadhikesav A. All rights reserved.
+  </footer>
+
+  <script>
+  document.getElementById('toggle-theme').onclick=function(){
+    document.body.classList.toggle('light');
+  }
+  </script>
+</body>
+</html>
