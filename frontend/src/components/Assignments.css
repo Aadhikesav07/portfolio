@@ -1,0 +1,83 @@
+.assignments-container {
+  padding: 20px 0;
+}
+
+.assignments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.assignments-header h1 {
+  color: white;
+  font-size: 36px;
+}
+
+.assignments-list {
+  margin-top: 20px;
+}
+
+.assignment-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.assignment-header h3 {
+  color: #667eea;
+  margin: 0;
+}
+
+.mandatory-badge {
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.assignment-description {
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.assignment-instructions {
+  color: #555;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.assignment-details {
+  color: #888;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.no-assignments {
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  padding: 40px;
+}
+

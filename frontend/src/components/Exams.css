@@ -50,6 +50,50 @@
   color: #555;
 }
 
+.exam-description {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.exam-duration {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.exam-min-marks {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.questions-section {
+  margin-top: 20px;
+}
+
+.questions-section h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.question-card {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.question-header h4 {
+  color: #667eea;
+  margin: 0;
+}
+
 .no-exams {
   text-align: center;
   color: white;

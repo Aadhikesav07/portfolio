@@ -4,10 +4,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Document(collection = "exams")
-public class Exam {
+@Document(collection = "assignments")
+public class Assignment {
 
     @Id
     private String id;
@@ -15,16 +14,15 @@ public class Exam {
     private String courseId;
     private String title;
     private String description;
-    private LocalDateTime examDate;
-    private LocalDateTime endDate;
-    private int durationMinutes;
-    private List<Question> questions;
-    private int minimumMarksRequired; // Minimum marks in course to register for exam
-    private String createdBy; // Instructor/Admin ID
+    private String instructions;
+    private boolean isMandatory; // true = mandatory, false = optional
+    private int maxMarks;
+    private LocalDateTime dueDate;
+    private String createdBy; // Instructor ID
     private LocalDateTime createdAt;
     private boolean isActive;
 
-    public Exam() {
+    public Assignment() {
         this.createdAt = LocalDateTime.now();
         this.isActive = true;
     }
@@ -42,20 +40,17 @@ public class Exam {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public LocalDateTime getExamDate() { return examDate; }
-    public void setExamDate(LocalDateTime examDate) { this.examDate = examDate; }
+    public String getInstructions() { return instructions; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
 
-    public LocalDateTime getEndDate() { return endDate; }
-    public void setEndDate(LocalDateTime endDate) { this.endDate = endDate; }
+    public boolean isMandatory() { return isMandatory; }
+    public void setMandatory(boolean mandatory) { isMandatory = mandatory; }
 
-    public int getDurationMinutes() { return durationMinutes; }
-    public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
+    public int getMaxMarks() { return maxMarks; }
+    public void setMaxMarks(int maxMarks) { this.maxMarks = maxMarks; }
 
-    public List<Question> getQuestions() { return questions; }
-    public void setQuestions(List<Question> questions) { this.questions = questions; }
-
-    public int getMinimumMarksRequired() { return minimumMarksRequired; }
-    public void setMinimumMarksRequired(int minimumMarksRequired) { this.minimumMarksRequired = minimumMarksRequired; }
+    public LocalDateTime getDueDate() { return dueDate; }
+    public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
 
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
@@ -66,3 +61,4 @@ public class Exam {
     public boolean isActive() { return isActive; }
     public void setActive(boolean active) { isActive = active; }
 }
+

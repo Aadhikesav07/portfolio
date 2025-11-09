@@ -33,11 +33,27 @@
             http.csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests(auth -> auth
+                    // Public endpoints
                     .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                    .requestMatchers("/api/chatbot/**").permitAll() // AI Chatbot - read-only access
+                    
+                    // Admin only endpoints
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/courses/**").hasAnyRole("STUDENT", "ADMIN", "INSTRUCTOR")
-                    .requestMatchers("/api/exams/**").hasAnyRole("STUDENT", "ADMIN", "INSTRUCTOR")
-                    .requestMatchers("/api/certificates/**").hasAnyRole("STUDENT", "ADMIN", "INSTRUCTOR")
+                    .requestMatchers("/api/courses", "/api/courses/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    
+                    // Exam endpoints - handled in controller for role-based CRUD
+                    .requestMatchers("/api/exams/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    
+                    // Assignment endpoints
+                    .requestMatchers("/api/assignments/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    
+                    // Certificate endpoints
+                    .requestMatchers("/api/certificates/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    
+                    // Student progress
+                    .requestMatchers("/api/progress/**").hasAnyRole("ADMIN", "INSTRUCTOR", "STUDENT")
+                    
                     .anyRequest().authenticated()
                 )   
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -38,6 +38,13 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.nav-user {
+  color: white;
+  padding: 8px 15px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
 .btn-logout {
   background-color: #e74c3c;
   border: none;

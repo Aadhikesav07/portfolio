@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import { useAuth } from '../context/AuthContext'
 import './Courses.css'
 
 function Courses() {
+  const { isAdmin, user } = useAuth()
+  const navigate = useNavigate()
   const [courses, setCourses] = useState([])
+  const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -11,12 +16,15 @@ function Courses() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    instructor: ''
+    instructorId: ''
   })
 
   useEffect(() => {
     fetchCourses()
-  }, [])
+    if (isAdmin()) {
+      fetchInstructors()
+    }
+  }, [isAdmin])
 
   const fetchCourses = async () => {
     try {
@@ -25,23 +33,42 @@ function Courses() {
       setCourses(response.data)
       setError('')
     } catch (err) {
-      setError('Failed to fetch courses')
+      setError(err.response?.data || 'Failed to fetch courses')
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
+  const fetchInstructors = async () => {
+    try {
+      const response = await api.get('/api/users')
+      const instructorUsers = response.data.filter(u => u.role === 'ROLE_INSTRUCTOR')
+      setInstructors(instructorUsers)
+    } catch (err) {
+      console.error('Failed to fetch instructors:', err)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!isAdmin()) {
+      setError('Only ADMIN can create courses')
+      return
+    }
     try {
-      await api.post('/api/courses', formData)
+      const instructor = instructors.find(i => i.id === formData.instructorId)
+      const courseData = {
+        ...formData,
+        instructorName: instructor ? instructor.fullName : ''
+      }
+      await api.post('/api/courses', courseData)
       setSuccess('Course added successfully!')
-      setFormData({ title: '', description: '', instructor: '' })
+      setFormData({ title: '', description: '', instructorId: '' })
       setShowForm(false)
       fetchCourses()
     } catch (err) {
-      setError('Failed to add course')
+      setError(err.response?.data || 'Failed to add course')
     }
   }
 
@@ -52,9 +79,13 @@ function Courses() {
         setSuccess('Course deleted successfully!')
         fetchCourses()
       } catch (err) {
-        setError('Failed to delete course')
+        setError(err.response?.data || 'Failed to delete course')
       }
     }
+  }
+
+  const handleViewCourse = (courseId) => {
+    navigate(`/course/${courseId}`)
   }
 
   if (loading) {
@@ -65,18 +96,20 @@ function Courses() {
     <div className="courses-container">
       <div className="courses-header">
         <h1>Courses</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? 'Cancel' : 'Add New Course'}
-        </button>
+        {isAdmin() && (
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? 'Cancel' : 'Add New Course'}
+          </button>
+        )}
       </div>
 
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
 
-      {showForm && (
+      {showForm && isAdmin() && (
         <div className="card">
           <h2>Add New Course</h2>
           <form onSubmit={handleSubmit}>
@@ -103,14 +136,20 @@ function Courses() {
             </div>
             <div className="form-group">
               <label>Instructor</label>
-              <input
-                type="text"
-                value={formData.instructor}
+              <select
+                value={formData.instructorId}
                 onChange={(e) =>
-                  setFormData({ ...formData, instructor: e.target.value })
+                  setFormData({ ...formData, instructorId: e.target.value })
                 }
                 required
-              />
+              >
+                <option value="">Select an instructor</option>
+                {instructors.map((instructor) => (
+                  <option key={instructor.id} value={instructor.id}>
+                    {instructor.fullName} ({instructor.email})
+                  </option>
+                ))}
+              </select>
             </div>
             <button type="submit" className="btn btn-primary">
               Add Course
@@ -128,14 +167,24 @@ function Courses() {
               <h3>{course.title}</h3>
               <p className="course-description">{course.description}</p>
               <p className="course-instructor">
-                <strong>Instructor:</strong> {course.instructor}
+                <strong>Instructor:</strong> {course.instructorName || 'Not assigned'}
               </p>
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(course.id)}
-              >
-                Delete
-              </button>
+              <div className="course-actions">
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleViewCourse(course.id)}
+                >
+                  View Details
+                </button>
+                {isAdmin() && (
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(course.id)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           ))
         )}

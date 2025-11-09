@@ -48,12 +48,13 @@
   font-size: 16px;
 }
 
-.certificate-id {
+.certificate-oid {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 14px;
   opacity: 0.9;
+  font-family: monospace;
 }
 
 .no-certificates {

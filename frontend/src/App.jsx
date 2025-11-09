@@ -5,7 +5,11 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Courses from './components/Courses'
 import Exams from './components/Exams'
+import ExamTaking from './components/ExamTaking'
+import Assignments from './components/Assignments'
 import Certificates from './components/Certificates'
+import Chatbot from './components/Chatbot'
+import Users from './components/Users'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import './App.css'
 
@@ -36,10 +40,42 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/exam/:examId"
+        element={
+          <ProtectedRoute>
+            <ExamTaking />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assignments"
+        element={
+          <ProtectedRoute>
+            <Assignments />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/certificates"
         element={
           <ProtectedRoute>
             <Certificates />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chatbot"
+        element={
+          <ProtectedRoute>
+            <Chatbot />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/users"
+        element={
+          <ProtectedRoute>
+            <Users />
           </ProtectedRoute>
         }
       />
