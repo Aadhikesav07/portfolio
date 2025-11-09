@@ -2,6 +2,10 @@
 
 A full-stack e-learning platform with Spring Boot backend and React frontend.
 
+## 🚀 Quick Start for New Users
+
+**New to this project?** Check out [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed step-by-step instructions on how to set up and run the project on your computer.
+
 ## Project Structure
 
 ```
