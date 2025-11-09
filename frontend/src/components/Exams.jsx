@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import { useAuth } from '../context/AuthContext'
 import './Exams.css'
 
 function Exams() {
+  const { isAdmin, isInstructor, isStudent } = useAuth()
+  const navigate = useNavigate()
   const [exams, setExams] = useState([])
   const [courses, setCourses] = useState([])
   const [selectedCourse, setSelectedCourse] = useState('')
@@ -13,8 +17,12 @@ function Exams() {
   const [formData, setFormData] = useState({
     courseId: '',
     title: '',
+    description: '',
     examDate: '',
-    questions: ''
+    endDate: '',
+    durationMinutes: 60,
+    minimumMarksRequired: 0,
+    questions: [{ questionText: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', marks: 1 }]
   })
 
   useEffect(() => {
@@ -33,7 +41,7 @@ function Exams() {
     try {
       const response = await api.get('/api/courses')
       setCourses(response.data)
-      if (response.data.length > 0) {
+      if (response.data.length > 0 && !selectedCourse) {
         setSelectedCourse(response.data[0].id)
       }
     } catch (err) {
@@ -55,23 +63,60 @@ function Exams() {
     }
   }
 
+  const handleAddQuestion = () => {
+    setFormData({
+      ...formData,
+      questions: [...formData.questions, { questionText: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', marks: 1 }]
+    })
+  }
+
+  const handleQuestionChange = (index, field, value) => {
+    const newQuestions = [...formData.questions]
+    newQuestions[index][field] = value
+    setFormData({ ...formData, questions: newQuestions })
+  }
+
+  const handleRemoveQuestion = (index) => {
+    const newQuestions = formData.questions.filter((_, i) => i !== index)
+    setFormData({ ...formData, questions: newQuestions })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!isAdmin() && !isInstructor()) {
+      setError('Only ADMIN and INSTRUCTOR can create exams')
+      return
+    }
+
     try {
       const examData = {
         ...formData,
-        questions: formData.questions.split('\n').filter((q) => q.trim())
+        examDate: new Date(formData.examDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString()
       }
       await api.post('/api/exams', examData)
-      setSuccess('Exam added successfully!')
-      setFormData({ courseId: '', title: '', examDate: '', questions: '' })
+      setSuccess('Exam created successfully!')
+      setFormData({
+        courseId: '',
+        title: '',
+        description: '',
+        examDate: '',
+        endDate: '',
+        durationMinutes: 60,
+        minimumMarksRequired: 0,
+        questions: [{ questionText: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', marks: 1 }]
+      })
       setShowForm(false)
-      if (formData.courseId) {
-        fetchExams(formData.courseId)
+      if (examData.courseId) {
+        fetchExams(examData.courseId)
       }
     } catch (err) {
-      setError('Failed to add exam')
+      setError(err.response?.data || 'Failed to create exam')
     }
+  }
+
+  const handleTakeExam = (examId) => {
+    navigate(`/exam/${examId}`)
   }
 
   if (loading && exams.length === 0) {
@@ -82,20 +127,22 @@ function Exams() {
     <div className="exams-container">
       <div className="exams-header">
         <h1>Exams</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? 'Cancel' : 'Add New Exam'}
-        </button>
+        {(isAdmin() || isInstructor()) && (
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? 'Cancel' : 'Create New Exam'}
+          </button>
+        )}
       </div>
 
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
 
-      {showForm && (
+      {showForm && (isAdmin() || isInstructor()) && (
         <div className="card">
-          <h2>Add New Exam</h2>
+          <h2>Create New Exam</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Course</label>
@@ -126,7 +173,16 @@ function Exams() {
               />
             </div>
             <div className="form-group">
-              <label>Exam Date</label>
+              <label>Description</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Exam Start Date & Time</label>
               <input
                 type="datetime-local"
                 value={formData.examDate}
@@ -137,18 +193,137 @@ function Exams() {
               />
             </div>
             <div className="form-group">
-              <label>Questions (one per line)</label>
-              <textarea
-                value={formData.questions}
+              <label>Exam End Date & Time</label>
+              <input
+                type="datetime-local"
+                value={formData.endDate}
                 onChange={(e) =>
-                  setFormData({ ...formData, questions: e.target.value })
+                  setFormData({ ...formData, endDate: e.target.value })
                 }
-                placeholder="Enter questions, one per line"
                 required
               />
             </div>
+            <div className="form-group">
+              <label>Duration (minutes)</label>
+              <input
+                type="number"
+                value={formData.durationMinutes}
+                onChange={(e) =>
+                  setFormData({ ...formData, durationMinutes: parseInt(e.target.value) })
+                }
+                required
+                min="1"
+              />
+            </div>
+            <div className="form-group">
+              <label>Minimum Marks Required (from assignments)</label>
+              <input
+                type="number"
+                value={formData.minimumMarksRequired}
+                onChange={(e) =>
+                  setFormData({ ...formData, minimumMarksRequired: parseInt(e.target.value) })
+                }
+                required
+                min="0"
+              />
+            </div>
+
+            <div className="questions-section">
+              <h3>Questions</h3>
+              {formData.questions.map((question, index) => (
+                <div key={index} className="question-card">
+                  <div className="question-header">
+                    <h4>Question {index + 1}</h4>
+                    {formData.questions.length > 1 && (
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleRemoveQuestion(index)}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label>Question Text</label>
+                    <textarea
+                      value={question.questionText}
+                      onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Option A</label>
+                    <input
+                      type="text"
+                      value={question.optionA}
+                      onChange={(e) => handleQuestionChange(index, 'optionA', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Option B</label>
+                    <input
+                      type="text"
+                      value={question.optionB}
+                      onChange={(e) => handleQuestionChange(index, 'optionB', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Option C</label>
+                    <input
+                      type="text"
+                      value={question.optionC}
+                      onChange={(e) => handleQuestionChange(index, 'optionC', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Option D</label>
+                    <input
+                      type="text"
+                      value={question.optionD}
+                      onChange={(e) => handleQuestionChange(index, 'optionD', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Correct Answer</label>
+                    <select
+                      value={question.correctAnswer}
+                      onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                      required
+                    >
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Marks</label>
+                    <input
+                      type="number"
+                      value={question.marks}
+                      onChange={(e) => handleQuestionChange(index, 'marks', parseInt(e.target.value))}
+                      required
+                      min="1"
+                    />
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleAddQuestion}
+              >
+                Add Question
+              </button>
+            </div>
+
             <button type="submit" className="btn btn-primary">
-              Add Exam
+              Create Exam
             </button>
           </form>
         </div>
@@ -177,18 +352,24 @@ function Exams() {
           exams.map((exam) => (
             <div key={exam.id} className="exam-card">
               <h3>{exam.title}</h3>
+              {exam.description && <p className="exam-description">{exam.description}</p>}
               <p className="exam-date">
-                <strong>Date:</strong>{' '}
-                {new Date(exam.examDate).toLocaleString()}
+                <strong>Date:</strong> {new Date(exam.examDate).toLocaleString()} - {new Date(exam.endDate).toLocaleString()}
               </p>
-              <div className="exam-questions">
-                <strong>Questions:</strong>
-                <ul>
-                  {exam.questions?.map((question, index) => (
-                    <li key={index}>{question}</li>
-                  ))}
-                </ul>
-              </div>
+              <p className="exam-duration">
+                <strong>Duration:</strong> {exam.durationMinutes} minutes
+              </p>
+              <p className="exam-min-marks">
+                <strong>Minimum Marks Required:</strong> {exam.minimumMarksRequired}
+              </p>
+              {isStudent() && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleTakeExam(exam.id)}
+                >
+                  Take Exam
+                </button>
+              )}
             </div>
           ))
         )}
@@ -198,4 +379,3 @@ function Exams() {
 }
 
 export default Exams
-

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ExamRepository extends MongoRepository<Exam, String> {
     List<Exam> findByCourseId(String courseId);
+    List<Exam> findByCourseIdAndIsActiveTrue(String courseId);
+    List<Exam> findByCreatedBy(String createdBy);
 }

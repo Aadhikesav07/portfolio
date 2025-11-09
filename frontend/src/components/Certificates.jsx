@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import api from '../services/api'
+import { useAuth } from '../context/AuthContext'
 import './Certificates.css'
 
 function Certificates() {
+  const { isStudent } = useAuth()
   const [certificates, setCertificates] = useState([])
   const [courses, setCourses] = useState([])
   const [exams, setExams] = useState([])
@@ -160,18 +162,31 @@ function Certificates() {
               <div className="certificate-header">
                 <h3>Certificate of Completion</h3>
               </div>
-              <div className="certificate-body">
-                <p>
-                  <strong>Course:</strong> {getCourseName(certificate.courseId)}
-                </p>
-                <p>
-                  <strong>Issued Date:</strong>{' '}
-                  {new Date(certificate.issueDate).toLocaleDateString()}
-                </p>
-                <p className="certificate-id">
-                  <strong>Certificate ID:</strong> {certificate.id}
-                </p>
-              </div>
+            <div className="certificate-body">
+              <p>
+                <strong>Course:</strong> {certificate.courseName || getCourseName(certificate.courseId)}
+              </p>
+              <p>
+                <strong>Exam Score:</strong> {certificate.examMarks} marks
+              </p>
+              <p>
+                <strong>Issued Date:</strong>{' '}
+                {new Date(certificate.issueDate).toLocaleDateString()}
+              </p>
+              <p className="certificate-oid">
+                <strong>Certificate OID:</strong> {certificate.oid || certificate.id}
+              </p>
+              {certificate.pdfPath && (
+                <a
+                  href={`/api/certificates/${certificate.id}/download`}
+                  download
+                  className="btn btn-primary btn-sm"
+                  style={{ marginTop: '15px', display: 'inline-block' }}
+                >
+                  Download PDF
+                </a>
+              )}
+            </div>
             </div>
           ))
         )}
